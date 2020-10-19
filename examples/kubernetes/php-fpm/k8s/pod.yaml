@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: success-pod
+  labels:
+    app: success
+spec:
+  volumes:
+    - name: nginx-config-vol
+      configMap:
+        name: nginx-config
+    - name: shared-files
+      emptyDir: {}
+  containers:
+    - name: nginx
+      image: nginx:1.19
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: nginx-config-vol
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+    - name: app
+      image: gaodacheng/success-fpm-app:1.0.0
+      volumeMounts:
+        - mountPath: /var/www/html
+          name: shared-files
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "cp -r /app/. /var/www/html"]
