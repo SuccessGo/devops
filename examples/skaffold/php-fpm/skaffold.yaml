@@ -1,7 +1,7 @@
-apiVersion: skaffold/v2beta8
+apiVersion: skaffold/v2beta9
 kind: Config
 
 build:
   artifacts:
-    - image: fpm-app
-      context: .
+  - image: fpm-app
+    context: .
